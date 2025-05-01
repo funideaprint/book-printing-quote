@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>書本印刷試算系統</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>書本印刷試算系統</h1>
+
+  <form id="quoteForm">
+    <label>書本尺寸：
+      <select id="bookSize" name="bookSize" required onchange="handleSizeChange()">
+        <option value="A4">A4</option>
+        <option value="A5">A5</option>
+        <option value="B5">B5</option>
+        <option value="custom">自訂尺寸</option>
+      </select>
+    </label><br>
+
+    <div id="customSizeArea" style="display: none;">
+      <label>自訂寬度（mm）：
+        <input type="number" id="customWidth" name="customWidth" min="1" max="210">
+      </label><br>
+      <label>自訂高度（mm）：
+        <input type="number" id="customHeight" name="customHeight" min="1" max="297">
+      </label><br>
+      <small>※ 長邊或短邊不得超過A4（210x297mm）</small><br>
+    </div>
+
+    <label>頁數（不含封面扉頁）：
+      <input type="number" id="pages" name="pages" required min="1">
+    </label><br>
+
+    <label>封面材質：
+      <select id="coverMaterial" name="coverMaterial" required>
+        <option value="none">無封面</option>
+        <!-- 自動載入封面材質 -->
+      </select>
+    </label><br>
+
+    <label>扉頁材質：
+      <select id="flyleafMaterial" name="flyleafMaterial" required>
+        <option value="none">無扉頁</option>
+        <!-- 自動載入扉頁材質 -->
+      </select>
+    </label><br>
+
+    <label>扉頁是否印刷：
+      <select id="flyleafPrinting" name="flyleafPrinting" required>
+        <option value="印刷">印刷</option>
+        <option value="不印刷">不印刷</option>
+      </select>
+    </label><br>
+
+    <label>內頁材質：
+      <select id="innerMaterial" name="innerMaterial" required>
+        <!-- 自動載入內頁材質 -->
+      </select>
+    </label><br>
+
+    <label>裝訂方向：
+      <select id="bindingDirection" name="bindingDirection" required onchange="handleBindingDirectionChange()">
+        <option value="直式-長邊左翻">直式（長邊裝釘）左翻</option>
+        <option value="直式-長邊右翻">直式（長邊裝釘）右翻</option>
+        <option value="橫式-短邊左翻">橫式（短邊裝釘）左翻</option>
+        <option value="橫式-短邊右翻">橫式（短邊裝釘）右翻</option>
+      </select>
+    </label><br>
+
+    <label>裝訂方式：
+      <select id="binding" name="binding" required>
+        <!-- 自動載入裝訂方式 -->
+      </select>
+    </label><br>
+
+    <label>內頁印刷方式：
+      <select id="printingType" name="printingType" required>
+        <option value="彩色單面">彩色單面</option>
+        <option value="彩色雙面">彩色雙面</option>
+        <option value="黑白單面">黑白單面</option>
+        <option value="黑白雙面">黑白雙面</option>
+      </select>
+    </label><br>
+
+    <label>數量（本）：
+      <input type="number" id="quantity" name="quantity" required min="1">
+    </label><br>
+
+    <h2>客戶資料</h2>
+
+    <label>手冊名稱：
+      <input type="text" id="manualName" name="manualName" required>
+    </label><br>
+
+    <label>公司名稱：
+      <input type="text" id="companyName" name="companyName" required>
+    </label><br>
+
+    <label>統一編號：
+      <input type="text" id="taxId" name="taxId" required>
+    </label><br>
+
+    <label>聯絡人姓名：
+      <input type="text" id="contactName" name="contactName" required>
+    </label><br>
+
+    <label>電話：
+      <input type="text" id="phone" name="phone" required>
+    </label><br>
+
+    <label>Email：
+      <input type="email" id="email" name="email" required>
+    </label><br>
+
+    <label>地址：
+      <input type="text" id="address" name="address" required>
+    </label><br>
+
+    <button type="submit">提交詢價並產生報價單</button>
+  </form>
+
+  <div id="quoteResult" style="margin-top: 20px;"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
