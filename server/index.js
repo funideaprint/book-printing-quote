@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, '../client')));
 
 // 📌 MongoDB 連線設定
-const url = 'mongodb://localhost:27017';
+const url = process.env.MONGODB_URI;
 const client = new MongoClient(url);
 const dbName = 'book_printing';
 
@@ -29,8 +29,10 @@ app.get('/api/materials/:type', async (req, res) => {
     const materials = await collection.find({ materialType: type }).toArray();
     res.json(materials);
   } catch (err) {
-    res.status(500).json({ message: '讀取材質資料失敗' });
-  }
+  console.error('[API 錯誤]', err);
+  res.status(500).json({ message: '讀取材質資料失敗', error: err.message });
+}
+
 });
 
 // 📌 報價API
