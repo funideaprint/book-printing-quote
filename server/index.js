@@ -10,8 +10,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.use(express.static(path.join(__dirname, '../client')));
-app.get('/', ...);
+// 提供 admin 資料夾靜態頁面（後台）
+app.use('/admin', express.static(path.join(__dirname, '../admin')));
 
 
 // 提供 client 資料夾的檔案（讓前端可以讀到）
