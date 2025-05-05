@@ -10,6 +10,10 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+app.use(express.static(path.join(__dirname, '../client')));
+app.get('/', ...);
+
+
 // 提供 client 資料夾的檔案（讓前端可以讀到）
 app.use(express.static(path.join(__dirname, '../client')));
 
