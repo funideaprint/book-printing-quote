@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>材質管理</title>
+  <link rel="stylesheet" href="/style.css">
+  <style>
+    table, th, td {
+      border: 1px solid #aaa;
+      border-collapse: collapse;
+      padding: 8px;
+    }
+    table {
+      width: 100%;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📄 材質管理</h1>
+  <form id="materialForm">
+    <label>材質類型：
+      <select name="materialType" required>
+        <option value="cover">封面</option>
+        <option value="flyleaf">扉頁</option>
+        <option value="inner">內頁</option>
+        <option value="binding">裝訂</option>
+      </select>
+    </label><br>
+
+    <label>材質名稱：
+      <input type="text" name="name" required>
+    </label><br>
+
+    <label>價格級距（JSON格式）：<br>
+      <textarea name="pricing" rows="6" cols="50" placeholder='{"single":[{"minQty":1,"maxQty":9,"price":10}], "double":[{"minQty":1,"maxQty":9,"price":15}]}' required></textarea>
+    </label><br>
+
+    <button type="submit">新增材質</button>
+  </form>
+
+  <h2>現有材質</h2>
+  <table id="materialsTable">
+    <thead>
+      <tr>
+        <th>類型</th>
+        <th>名稱</th>
+        <th>價格級距</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function loadMaterials() {
+      const tbody = document.querySelector("#materialsTable tbody");
+      tbody.innerHTML = "";
+      for (const type of ["cover", "flyleaf", "inner", "binding"]) {
+        const res = await fetch(`/api/materials/${type}`);
+        const materials = await res.json();
+        materials.forEach(m => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${m.materialType}</td>
+            <td>${m.name}</td>
+            <td><pre>${JSON.stringify(m.pricing, null, 2)}</pre></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    }
+
+    document.getElementById("materialForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        materialType: form.materialType.value,
+        name: form.name.value,
+        pricing: JSON.parse(form.pricing.value)
+      };
+
+      const res = await fetch("/api/admin/materials", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      alert(result.message);
+      if (res.ok) {
+        form.reset();
+        loadMaterials();
+      }
+    });
+
+    loadMaterials();
+  </script>
+</body>
+</html>

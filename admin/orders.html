@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>訂單記錄管理</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <h1>📦 訂單記錄</h1>
+
+  <table border="1" cellpadding="8">
+    <thead>
+      <tr>
+        <th>下單時間</th>
+        <th>手冊名稱</th>
+        <th>公司名稱</th>
+        <th>數量</th>
+        <th>總價</th>
+        <th>詳細內容</th>
+      </tr>
+    </thead>
+    <tbody id="ordersTable">
+      <tr><td colspan="6">載入中...</td></tr>
+    </tbody>
+  </table>
+
+  <script>
+    async function loadOrders() {
+      try {
+        const res = await fetch('/api/admin/orders');
+        const orders = await res.json();
+        const tbody = document.getElementById('ordersTable');
+
+        if (orders.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6">目前沒有訂單紀錄</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = '';
+        orders.forEach(order => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${new Date(order.createdAt).toLocaleString()}</td>
+            <td>${order.manualName}</td>
+            <td>${order.companyName}</td>
+            <td>${order.quantity}</td>
+            <td>${order.totalPrice || '未儲存'}</td>
+            <td>
+              <details>
+                <summary>查看</summary>
+                <pre>${JSON.stringify(order, null, 2)}</pre>
+              </details>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        document.getElementById('ordersTable').innerHTML = `<tr><td colspan="6">載入失敗</td></tr>`;
+        console.error(err);
+      }
+    }
+
+    loadOrders();
+  </script>
+</body>
+</html>
